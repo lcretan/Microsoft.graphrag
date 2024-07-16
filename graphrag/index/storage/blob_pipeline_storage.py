@@ -7,6 +7,7 @@ import logging
 import re
 from collections.abc import Iterator
 from pathlib import Path
+import time
 from typing import Any
 
 from azure.identity import DefaultAzureCredential
@@ -72,17 +73,19 @@ class BlobPipelineStorage(PipelineStorage):
         """Create the container if it does not exist."""
         if not self.container_exists():
             container_name = self._container_name
-            container_names = [
-                container.name
-                for container in self._blob_service_client.list_containers()
-            ]
-            if container_name not in container_names:
-                self._blob_service_client.create_container(container_name)
+            created = False
+            while not created:
+                try:
+                    self._blob_service_client.create_container(container_name)
+                    created = True
+                except Exception as e:
+                    print('error', e)
+                    time.sleep(5)
 
-    async def delete_container(self) -> None:
+    def delete_container(self) -> None:
         """Delete the container."""
         if self.container_exists():
-            return self._blob_service_client.delete_container(self._container_name)
+            self._blob_service_client.delete_container(self._container_name)
 
     def container_exists(self) -> bool:
         """Check if the container exists."""
