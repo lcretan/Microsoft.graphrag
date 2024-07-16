@@ -89,7 +89,7 @@ async def prepare_azurite_data(input_path: str, azure: dict) -> Callable[[], Non
     """Prepare the data for the Azurite tests."""
     input_container = azure["input_container"]
     input_base_dir = azure.get("input_base_dir")
-
+    print('input_container----------------', input_container)
     root = Path(input_path)
     input_storage = BlobPipelineStorage(
         connection_string=None,
