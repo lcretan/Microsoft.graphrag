@@ -16,8 +16,6 @@ variables:
   GRAPHRAG_EMBEDDING_TYPE: "azure_openai_embedding"  
   GRAPHRAG_CACHE_TYPE: "blob"  
   GRAPHRAG_CACHE_CONNECTION_STRING: $(BLOB_STORAGE_CONNECTION_STRING)  
-  AZURE_AI_SEARCH_URL_ENDPOINT: $(AZURE_SEARCH_URL_ENDPOINT)  
-  AZURE_AI_SEARCH_API_KEY: $(AZURE_SEARCH_API_KEY)  
   GRAPHRAG_CACHE_CONTAINER_NAME: "cicache"  
   GRAPHRAG_CACHE_BASE_DIR: "cache"  
   GRAPHRAG_LLM_MODEL: gpt-3.5-turbo-16k  
@@ -106,8 +104,13 @@ stages:
           inputs:  
             azureSubscription: $(AZURE_SERVICE_CONNECTION_NAME)  
             scriptType: bash  
-            scriptLocation: inlineScript  
+            scriptLocation: inlineScript
+
             inlineScript: |
+              export AZURE_AI_SEARCH_URL_ENDPOINT=$(AZURE_AI_SEARCH_URL_ENDPOINT)
+              export AZURE_AI_SEARCH_API_KEY=$(AZURE_AI_SEARCH_API_KEY)
+              export GRAPHRAG_CACHE_CONNECTION_STRING=$(GRAPHRAG_CACHE_CONNECTION_STRING)
+              export BLOB_STORAGE_URL=$(BLOB_STORAGE_URL)
               poetry run poe test_smoke   
     
         - task: PublishPipelineArtifact@1  
