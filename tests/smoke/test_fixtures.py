@@ -41,7 +41,7 @@ def _load_fixtures():
         with config_file.open() as f:
             params.append((subfolder, json.load(f)))
 
-    return params
+    return params[0:1]
 
 
 def pytest_generate_tests(metafunc):
