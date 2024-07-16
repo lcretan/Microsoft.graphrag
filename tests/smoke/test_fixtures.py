@@ -97,7 +97,7 @@ async def prepare_azurite_data(input_path: str, azure: dict) -> Callable[[], Non
         container_name=input_container,
     )
     # Bounce the container if it exists to clear out old run data
-    input_storage.delete_container()
+    await input_storage.delete_container()
     input_storage.create_container()
 
     # Upload data files

@@ -79,10 +79,10 @@ class BlobPipelineStorage(PipelineStorage):
             if container_name not in container_names:
                 self._blob_service_client.create_container(container_name)
 
-    def delete_container(self) -> None:
+    async def delete_container(self) -> None:
         """Delete the container."""
         if self.container_exists():
-            self._blob_service_client.delete_container(self._container_name)
+            return self._blob_service_client.delete_container(self._container_name)
 
     def container_exists(self) -> bool:
         """Check if the container exists."""
